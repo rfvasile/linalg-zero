@@ -4,7 +4,7 @@
 
 # Linalg-Zero
 
-Check out the [poster](docs/poster.pdf), the [paper](docs/report.pdf) and the [demo](https://www.youtube.com/watch?v=Dxc3yTr-AE0). The model is also deployed on [HuggingFace Spaces](https://huggingface.co/spaces/rfvasile/linalg-zero).
+Check out the [poster](docs/poster.pdf) and the [paper](docs/report.pdf). The model is also deployed on [HuggingFace Spaces](https://huggingface.co/spaces/rfvasile/linalg-zero).
 
 ![image](https://github.com/user-attachments/assets/b7019c34-8dcf-45a3-830e-050a822e9ff0)
 

@@ -1,17 +1,14 @@
-# Copyright Sierra
-
 import json
 from typing import Any
 
 from art.utils import limit_concurrency
 from art.utils.litellm import convert_litellm_choice_to_openai
-from litellm import Choices, acompletion
-from litellm.types.utils import ModelResponse
-from tenacity import retry, stop_after_attempt, wait_exponential
-
 from linalg_zero.grpo.agents.base import Agent
 from linalg_zero.grpo.envs.base import Env
 from linalg_zero.grpo.types import RESPOND_ACTION_NAME, Action, SolveResult
+from litellm import Choices, acompletion
+from litellm.types.utils import ModelResponse
+from tenacity import retry, stop_after_attempt, wait_exponential
 
 
 @retry(

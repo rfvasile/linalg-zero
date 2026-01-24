@@ -1,17 +1,21 @@
-# Copyright Sierra
-
 import ast
 import json
 from dataclasses import dataclass
 from typing import Any
 
-try:
-    from hydra.core.config_store import ConfigStore
-except ModuleNotFoundError:  # pragma: no cover
-    ConfigStore = None
+from linalg_zero.shared.types import LibTypes
 from pydantic import BaseModel
 
-from linalg_zero.shared.types import LibTypes
+
+def _get_config_store() -> Any | None:
+    try:
+        from hydra.core.config_store import ConfigStore
+    except ModuleNotFoundError:  # pragma: no cover
+        return None
+    return ConfigStore
+
+
+ConfigStore = _get_config_store()
 
 RESPOND_ACTION_NAME = "respond"
 RESPOND_ACTION_FIELD_NAME = "content"

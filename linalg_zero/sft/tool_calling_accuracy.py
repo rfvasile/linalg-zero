@@ -15,8 +15,6 @@ from tqdm import tqdm
 from transformers import PreTrainedModel, PreTrainedTokenizer
 from transformers.trainer_callback import TrainerCallback, TrainerControl, TrainerState
 from transformers.training_args import TrainingArguments
-from weave import EvaluationLogger
-from weave.trace.context import weave_client_context
 
 from linalg_zero.distillation.components.models import DefaultConfig
 from linalg_zero.distillation.data import FunctionInvocationInfo, ThoughtSchema
@@ -107,6 +105,11 @@ class ToolCallingAccuracyCallback(TrainerCallback):
         self, state: TrainerState, all_messages: list[list[dict[str, Any]]], metadata: dict[str, int]
     ) -> None:
         """Log predictions and summary to Weave."""
+        # Imported lazily: weave is a training-only dependency, kept out of the import path
+        # so the pure scoring/extraction methods stay importable without it.
+        from weave import EvaluationLogger
+        from weave.trace.context import weave_client_context
+
         client = weave_client_context.get_weave_client()
         if client is not None:
             eval_attributes = {

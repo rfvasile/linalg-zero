@@ -1,8 +1,9 @@
 from __future__ import annotations
 
-from typing import Any, cast
+from typing import TYPE_CHECKING, Any, cast
 
-import art
+if TYPE_CHECKING:
+    import art
 
 
 def messages_and_choices_to_messages(messages_and_choices: art.MessagesAndChoices) -> list[dict[str, Any]]:

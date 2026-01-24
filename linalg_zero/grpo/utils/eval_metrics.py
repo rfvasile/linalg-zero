@@ -2,11 +2,14 @@ from __future__ import annotations
 
 import statistics
 from collections import Counter
+from typing import TYPE_CHECKING
 
-import art
 import wandb
 
 from linalg_zero.grpo.utils.trajectory_messages import extract_tool_name_sequence
+
+if TYPE_CHECKING:
+    import art
 
 
 def log_group_diversity(*, step: int, groups: list[art.TrajectoryGroup], split: str) -> None:

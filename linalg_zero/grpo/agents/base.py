@@ -1,5 +1,3 @@
-# Copyright Sierra
-
 import abc
 
 from linalg_zero.grpo.envs.base import Env

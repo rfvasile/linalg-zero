@@ -3,14 +3,15 @@ from __future__ import annotations
 import math
 from collections import Counter
 from collections.abc import Generator
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-from art.utils import iterate_dataset
-from art.utils.iterate_dataset import DatasetBatch
 from tqdm import tqdm
 
 from linalg_zero.grpo.task_selection import ShuffleBagSampler, ToolCallsMixtureSampler, get_task_indices
 from linalg_zero.grpo.types import RunConfig
+
+if TYPE_CHECKING:
+    from art.utils.iterate_dataset import DatasetBatch
 
 COVERAGE_LOG_MAX_TOOL_CALLS_BUCKET = 3
 COVERAGE_PRINT_EVERY_STEPS = 50
@@ -111,6 +112,8 @@ def prefill_coverage_tracker(
     To keep `train/curriculum_seen_*` continuous across restarts, replay the deterministic
     sampler for steps < `initial_step` and update coverage state without logging.
     """
+    from art.utils import iterate_dataset
+
     if initial_step <= 0:
         return
 
@@ -168,6 +171,8 @@ def iterate_curriculum(
     tool-call buckets (via `ToolCallsMixtureSampler`) instead of sampling uniformly from a
     single eligible pool.
     """
+    from art.utils.iterate_dataset import DatasetBatch
+
     if base_epoch_size <= 0:
         return
 

@@ -1,5 +1,3 @@
-# Copyright Sierra
-
 import random
 from functools import cache
 
@@ -7,12 +5,8 @@ from linalg_zero.grpo.envs.base import Env
 from linalg_zero.grpo.envs.linear_algebra.tasks import load_tasks
 from linalg_zero.grpo.envs.linear_algebra.tools import ALL_TOOLS
 from linalg_zero.grpo.envs.user import UserStrategy
-from linalg_zero.grpo.types import (
-    RESPOND_ACTION_NAME,
-    RewardOutputInfo,
-    RewardResult,
-    Task,
-)
+from linalg_zero.grpo.types import (RESPOND_ACTION_NAME, RewardOutputInfo,
+                                    RewardResult, Task)
 from linalg_zero.grpo.verifiers.xml_parser import XMLParser
 from linalg_zero.shared.system_prompts import get_sft_system_prompt
 
@@ -64,104 +58,6 @@ class LinearAlgebraEnv(Env):
 
         split = split_mapping[task_split]
         return _load_tasks_cached(hf_path, split)
-
-    async def calculate_reward_old(self, format_weight: float = 0.1) -> RewardResult:
-        """
-        Revised Reward Function for GRPO:
-        1. Punish Laziness: No tool calls = -1.0.
-        2. Punish Wrong Answers: 0.0 (Neutral).
-        3. Reward Correct Answers: 1.0 (High).
-        4. Penalize Deviation: Enforce exact step count to prevent "Mental Math".
-
-        # Calculate the final reward:
-        # If Correct:   (0.9 * 1.0) + (0.1 * 1.0) - Penalty ≈ 1.0 - Penalty
-        # If Wrong:     (0.9 * 0.0) + (0.1 * 1.0) - Penalty ≈ 0.1 - Penalty
-        # If Lazy:      Returns -1.0 immediately
-        """
-        assert self.parser is not None, "Parser cannot be None"
-
-        # If, for any reason, we received no actions at all, treat this as a
-        # maximally lazy / failed trajectory rather than raising an error.
-        if not self.actions:
-            return RewardResult(
-                reward=-1.0,
-                info=RewardOutputInfo(
-                    r_outputs=-1.0,
-                    outputs={"structural_error": "no_actions", "answer_found": False},
-                ),
-                actions=[],
-            )
-
-        tool_calls = self.actions[:-1]
-        answer = self.actions[-1]
-
-        # If the model tries to solve it purely by hallucinating the answer
-        # (0 turns) or breaks before calling tools, it gets the Maximum Penalty.
-        if len(tool_calls) == 0:
-            return RewardResult(
-                reward=-1.0,
-                info=RewardOutputInfo(
-                    r_outputs=-1.0,
-                    outputs={"structural_error": "no_tool_calls", "answer_found": False},
-                ),
-                actions=self.actions,
-            )
-
-        # If we have no tool_calls, we presume the final turn is an answer.
-        if answer.name != RESPOND_ACTION_NAME:
-            return RewardResult(
-                reward=-1.0,
-                info=RewardOutputInfo(
-                    r_outputs=-1.0,
-                    outputs={"structural_error": "no_respond_action", "answer_found": False},
-                ),
-                actions=self.actions,
-            )
-        if answer.content is None:
-            return RewardResult(
-                reward=-1.0,
-                info=RewardOutputInfo(
-                    r_outputs=-1.0,
-                    outputs={"structural_error": "no_answer_content", "answer_found": False},
-                ),
-                actions=self.actions,
-            )
-
-        # 1. Correctness
-        is_correct = validate_answer(
-            ground_truth=self.task.outputs[0],
-            completion=answer.content,
-        )
-        correctness_score = 1.0 if is_correct else 0.0
-
-        # 2. Format
-        format_score = self.format_reward()
-
-        # 3. Efficiency
-        expected_turns = len(self.task.actions)
-        num_turns = len(tool_calls)
-        efficiency_penalty = 0.0
-        if expected_turns > 0 and num_turns != expected_turns:
-            # We cap the penalty at -0.5 so it doesn't overwhelm the correctness score
-            efficiency_penalty = max(-0.5, -0.1 * abs(num_turns - expected_turns))
-
-        final_reward = (1.0 - format_weight) * correctness_score + format_weight * format_score + efficiency_penalty
-
-        return RewardResult(
-            reward=final_reward,
-            info=RewardOutputInfo(
-                r_outputs=final_reward,
-                outputs={
-                    "answer_found": is_correct,
-                    "correctness_score": correctness_score,
-                    "format_score": format_score,
-                    "efficiency_penalty": efficiency_penalty,
-                    "num_turns": num_turns,
-                    "expected_turns": expected_turns,
-                },
-            ),
-            actions=tool_calls,
-        )
 
     def reasoning_depth_reward(self) -> float:
         """Reward appropriate reasoning depth."""

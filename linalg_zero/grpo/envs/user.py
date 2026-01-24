@@ -1,5 +1,3 @@
-# Copyright Sierra
-
 import abc
 import enum
 from typing import ClassVar

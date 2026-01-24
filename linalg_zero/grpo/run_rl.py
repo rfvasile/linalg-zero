@@ -11,11 +11,10 @@ import wandb
 from art.local import LocalBackend
 from art.utils import iterate_dataset, limit_concurrency
 from dotenv import load_dotenv
-from tqdm.asyncio import tqdm_asyncio
 
 from linalg_zero.grpo.agents.tool_calling_agent import ToolCallingRLAgent
 from linalg_zero.grpo.envs import get_env
-from linalg_zero.grpo.general_rm import calculate_reward, create_general_rm_trajectory_groups
+from linalg_zero.grpo.general_rm import calculate_reward
 from linalg_zero.grpo.rl_utils import (
     log_trajectory_to_openpipe,
     write_eval_trajectories,
@@ -151,7 +150,7 @@ async def rollout_linalg_task(
                 "turn_deviation": outputs["num_turns"] - outputs["expected_turns"],
             })
         traj.metadata.update(result.info)
-        traj.metadata["reward"] = "pending_general_rm" if config.reward_type == "general_rm" else traj.reward
+        traj.metadata["reward"] = traj.reward
         traj.metadata["optimal_trajectory"] = traj.metrics["optimal_trajectory"]
         traj.metadata["judge_explanation"] = explanation
 
@@ -487,15 +486,6 @@ async def train(model: art.TrainableModel[LinAlgPolicyConfig]):  # noqa: C901
             )
             # await model.log(groups, split="train")
             log_group_diversity(step=batch.step, groups=groups, split="train")
-
-            if config.reward_type == "general_rm":
-                print("Creating general RM trajectory groups...")
-                updated_groups = await tqdm_asyncio.gather(
-                    *[create_general_rm_trajectory_groups(group, config) for group in groups],
-                    desc="Creating general RM trajectory groups",
-                    total=len(groups),
-                )
-                groups = updated_groups
 
             # Training step
             print(f"Training on {len(groups)} trajectory groups...")

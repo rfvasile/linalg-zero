@@ -1,6 +1,6 @@
-## NOTE: the llama-cpp server is used to startup the inference server using `make distillation-server`
-# Fixing the llama-cpp server version to 0.3.13 as the upstream repository gets updated frequently
-# leading to incompatibility issues. If bumping the version don't forget to update pyproject.toml.
+UV_CACHE_DIR ?= $(CURDIR)/uv-cache
+export UV_CACHE_DIR
+
 .PHONY: install-data-gen
 install-data-gen: ## Install the virtual environment and install the pre-commit hooks.
 	@echo "🚀 Creating virtual environment using uv"

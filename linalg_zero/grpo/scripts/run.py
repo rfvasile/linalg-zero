@@ -1,14 +1,11 @@
-# Copyright Sierra
-
 import argparse
 import logging
 
 from dotenv import load_dotenv
-from litellm import provider_list
-
 from linalg_zero.grpo.envs.user import UserStrategy
 from linalg_zero.grpo.run import run
 from linalg_zero.grpo.types import RunConfig
+from litellm import provider_list
 
 load_dotenv(override=True)
 

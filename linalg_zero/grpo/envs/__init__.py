@@ -1,6 +1,3 @@
-# Copyright Sierra
-
-
 from linalg_zero.grpo.envs.base import Env
 from linalg_zero.grpo.envs.linear_algebra.env import LinearAlgebraEnv
 from linalg_zero.grpo.envs.user import UserStrategy

@@ -404,14 +404,3 @@ def get_task_indices(  # noqa: C901
         selected_set = {easiest_first[0]}
 
     return [idx for idx in easiest_first if idx in selected_set]
-
-
-def sample_indices_to_length(*, indices: Sequence[int], length: int, rng: random.Random) -> list[int]:
-    """Sample `length` indices, using replacement if needed."""
-    if length <= 0:
-        return []
-    if not indices:
-        raise ValueError("Cannot sample from an empty index set.")
-    if len(indices) >= length:
-        return list(rng.sample(list(indices), length))
-    return list(rng.choices(list(indices), k=length))

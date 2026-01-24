@@ -1,5 +1,3 @@
-# Copyright Sierra
-
 import random
 from collections.abc import Callable
 from hashlib import sha256
@@ -7,20 +5,11 @@ from typing import Any
 
 from linalg_zero.grpo.envs.tool import Tool
 from linalg_zero.grpo.envs.user import UserStrategy, load_user
-from linalg_zero.grpo.types import (
-    RESPOND_ACTION_NAME,
-    Action,
-    EnvInfo,
-    EnvResetResponse,
-    EnvResponse,
-    RewardActionInfo,
-    RewardOutputInfo,
-    RewardResult,
-    Task,
-)
-from linalg_zero.grpo.verifiers.xml_parser import (
-    XMLParser,
-)
+from linalg_zero.grpo.types import (RESPOND_ACTION_NAME, Action, EnvInfo,
+                                    EnvResetResponse, EnvResponse,
+                                    RewardActionInfo, RewardOutputInfo,
+                                    RewardResult, Task)
+from linalg_zero.grpo.verifiers.xml_parser import XMLParser
 
 ToHashable = str | int | float | dict[str, "ToHashable"] | list["ToHashable"] | set["ToHashable"]
 HashableItem = str | int | float | tuple[Any, ...]
