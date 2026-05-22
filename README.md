@@ -112,6 +112,8 @@ The resulting checkpoints: [Linalg-Zero-SFT](https://huggingface.co/rfvasile/Lin
 
 ### Artifacts
 
+For a complete list of deliverables checkout page 66 in our [final report](./docs/report.pdf).
+
 | Artifact | Link |
 |---|---|
 | SFT checkpoint | [rfvasile/LinalgZero-SFT](https://huggingface.co/rfvasile/LinalgZero-SFT) |
