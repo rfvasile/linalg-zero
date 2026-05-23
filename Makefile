@@ -23,11 +23,6 @@ install-grpo: ## Install the virtual environment and install the pre-commit hook
 	@uv sync --locked --group grpo
 	@uv run pre-commit install
 
-.PHONY: setup-dev
-setup-dev: ## Setup the development environment
-	@echo "🚀 Setting up development environment"
-	@uv run linalg_zero/distillation/scripts/push_debug_dataset.py --dataset-name rfvasile/linalg-debug --private
-
 .PHONY: check
 check: ## Run code quality tools.
 	@echo "🚀 Checking lock file consistency with 'pyproject.toml'"
@@ -118,45 +113,15 @@ distillation-vllm-local: ## Start the vLLM server
 	@export USING_VLLM=true INFERENCE_BACKEND=vllm && uv run python linalg_zero/distillation/launch_server.py --config linalg_zero/config/distillation/vllm_qwen3_4b_think.yaml
 
 
-.PHONY: distillation-local
-distillation-debug: ## Start the vLLM server
-	@echo "🚀 Starting vLLM server"
+.PHONY: distillation-debug
+distillation-debug: ## Run the distillation pipeline locally with the 4b vLLM config
+	@echo "🚀 Running distillation pipeline locally"
 	@export USING_VLLM=true && uv run python linalg_zero/distillation.py --config linalg_zero/config/distillation/vllm_qwen3_4b_think.yaml
-
-
-# SFT Training Commands
-SFT_CONFIG=linalg_zero/config/sft/sft_debug_config.yaml
-# SFT_CONFIG=linalg_zero/config/sft/sft_config.yaml
-ACCELERATE_CONFIG=linalg_zero/config/sft/accelerate/zero3.yaml
-
-.PHONY: sft-debug
-sft-debug: ## Run SFT training on single GPU
-	@echo "🚀 Running SFT training on single GPU"
-	@uv run python linalg_zero/sft.py --config $(SFT_CONFIG)
-
-
-.PHONY: sft-distributed
-sft-distributed: ## Run SFT training with distributed setup using DeepSpeed ZeroStage 3
-	@echo "🚀 Running distributed SFT training with DeepSpeed"
-	@uv run accelerate launch --config_file=$(ACCELERATE_CONFIG) linalg_zero/sft.py --config $(SFT_CONFIG)
-
-.PHONY: prepare-grpo-dataset
-prepare-grpo-dataset: ## Prepare the GRPO dataset
-	@echo "🚀 Creating GRPO dataset"
-	@uv run linalg_zero/grpo/process_dataset.py
 
 .PHONY: generate-optimised-config
 generate-optimised-config: ## Generate the optimised config
 	@echo "🚀 Generating optimised config"
 	@uv run linalg_zero/generator/analysis/analyse.py
-
-.PHONY: run-training
-run-training: ## Run the training pipeline
-	@echo "🚀 Running training pipeline"
-	@$(MAKE) setup-dev
-	@$(MAKE) prepare-grpo-dataset
-	@echo "🚀 Training pipeline completed"
-
 
 .PHONY: help
 help:
