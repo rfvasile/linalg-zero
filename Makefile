@@ -30,7 +30,7 @@ check: ## Run code quality tools.
 	@echo "🚀 Linting code: Running pre-commit"
 ifeq ($(CI),true)
 	@echo "🔍 CI detected: Running ruff in check mode"
-	@uv run ruff check .
+	@uv run ruff check --no-fix .
 	@uv run ruff format --check .
 	@SKIP=ruff,ruff-format uv run pre-commit run -a
 else

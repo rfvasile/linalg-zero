@@ -61,7 +61,6 @@ async def rollout_linalg_task(
     This adapts the tau-bench evaluation loop for RL trajectory generation.
     Now truly async.
     """
-    # print(f"Rolling out task {task_index} (step {step}, phase {phase})")
     config = copy.deepcopy(model.config.run_config)
     success_reward = 1.0
     if is_shadow:
@@ -179,7 +178,6 @@ async def rollout_linalg_task(
     except Exception as e:
         print(f"Error logging trajectory to openpipe: {e}")
 
-    # print(f"Finished rolling out task {task_index} (reward: {traj.reward})")
     return traj
 
 

@@ -3,8 +3,9 @@ import json
 from dataclasses import dataclass
 from typing import Any
 
-from linalg_zero.shared.types import LibTypes
 from pydantic import BaseModel
+
+from linalg_zero.shared.types import LibTypes
 
 
 def _get_config_store() -> Any | None:

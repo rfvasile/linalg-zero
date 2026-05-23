@@ -369,20 +369,6 @@ def create_argilla_dataset_settings() -> rg.Settings:
     )
 
 
-def _delete_existing_argilla_dataset(client: rg.Argilla, dataset_name: str) -> None:
-    """Delete existing Argilla dataset if it exists."""
-    logger = get_logger(__name__)
-    try:
-        existing_dataset = client.datasets(name=dataset_name)
-        if existing_dataset:
-            existing_dataset.delete()
-            logger.info(f"Deleted existing Argilla dataset: {dataset_name}")
-    except Exception:
-        logger.exception("Failed to delete existing Argilla dataset")
-        # Dataset doesn't exist
-        pass
-
-
 def _format_value(value: Any) -> Any:
     """Recursively format values, applying safe_str_with_xml to strings and recursing through dicts."""
     if isinstance(value, dict):
@@ -467,9 +453,6 @@ def create_argilla_dataset(
     logger = get_logger(__name__)
 
     try:
-        # Delete existing dataset if it exists to ensure clean reupload
-        # _delete_existing_argilla_dataset(client, dataset_name)
-
         # Create dataset with settings
         settings = create_argilla_dataset_settings()
         dataset = rg.Dataset(
@@ -641,13 +624,8 @@ def load_datasets_for_distillation(args: DistillationConfig) -> dict[str, list[d
     if args.dataset_name is None:
         raise ValueError("dataset_name must be provided")
 
-    # TODO: Remove once done debugging runpod
-    # if not args.debug_mode:
     dataset = load_dataset_split(args.dataset_name, args.dataset_config, "train", take_n=take_n)
     datasets["train"] = convert_dataset_to_list_of_dicts(dataset)
-    # else:
-    #     failures_dataset = load_dataset_split(f"{args.hf_output_dataset}-failures", args.dataset_config, "train")
-    #     datasets["train"] = convert_dataset_to_list_of_dicts(failures_dataset)
 
     return datasets
 

@@ -5,8 +5,7 @@ from linalg_zero.grpo.envs.base import Env
 from linalg_zero.grpo.envs.linear_algebra.tasks import load_tasks
 from linalg_zero.grpo.envs.linear_algebra.tools import ALL_TOOLS
 from linalg_zero.grpo.envs.user import UserStrategy
-from linalg_zero.grpo.types import (RESPOND_ACTION_NAME, RewardOutputInfo,
-                                    RewardResult, Task)
+from linalg_zero.grpo.types import RESPOND_ACTION_NAME, RewardOutputInfo, RewardResult, Task
 from linalg_zero.grpo.verifiers.xml_parser import XMLParser
 from linalg_zero.shared.system_prompts import get_sft_system_prompt
 

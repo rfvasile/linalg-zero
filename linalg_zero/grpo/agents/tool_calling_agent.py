@@ -3,12 +3,13 @@ from typing import Any
 
 from art.utils import limit_concurrency
 from art.utils.litellm import convert_litellm_choice_to_openai
-from linalg_zero.grpo.agents.base import Agent
-from linalg_zero.grpo.envs.base import Env
-from linalg_zero.grpo.types import RESPOND_ACTION_NAME, Action, SolveResult
 from litellm import Choices, acompletion
 from litellm.types.utils import ModelResponse
 from tenacity import retry, stop_after_attempt, wait_exponential
+
+from linalg_zero.grpo.agents.base import Agent
+from linalg_zero.grpo.envs.base import Env
+from linalg_zero.grpo.types import RESPOND_ACTION_NAME, Action, SolveResult
 
 
 @retry(
@@ -154,9 +155,6 @@ class ToolCallingRLAgent(ToolCallingAgent):
             extra_body={"skip_special_tokens": self.skip_special_tokens},
             stop=self.stop,
             **request_kwargs,
-            # extra_body={"chat_template_kwargs": {"enable_thinking": False}}
-            # if "Qwen3-" in self.base_model
-            # else {},
         )
         assert isinstance(response, ModelResponse), f"Response is not a ModelResponse: {response}"
         choice = response.choices[0]

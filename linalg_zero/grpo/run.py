@@ -11,11 +11,12 @@ from math import comb
 from typing import Any
 
 from langfuse import Langfuse
+from litellm import provider_list
+
 from linalg_zero.grpo.agents.base import Agent
 from linalg_zero.grpo.envs import get_env
 from linalg_zero.grpo.envs.user import UserStrategy
 from linalg_zero.grpo.types import EnvRunResult, RunConfig
-from litellm import provider_list
 
 warnings.filterwarnings(
     "ignore",
@@ -148,8 +149,7 @@ def run(config: RunConfig) -> list[EnvRunResult]:
 
 def agent_factory(tools_info: list[dict[str, Any]], wiki: str, config: RunConfig) -> Agent:
     if config.agent_strategy == "tool-calling-rl":
-        from linalg_zero.grpo.agents.tool_calling_agent import \
-            ToolCallingRLAgent
+        from linalg_zero.grpo.agents.tool_calling_agent import ToolCallingRLAgent
 
         return ToolCallingRLAgent(
             tools_info=tools_info,
