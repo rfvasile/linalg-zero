@@ -1,4 +1,4 @@
-[![Release](https://img.shields.io/github/v/release/rfvasile/linalg-zero)](https://img.shields.io/github/v/release/rfvasile/linalg-zero)
+[![Release](https://img.shields.io/github/v/release/rfvasile/linalg-zero?no-cache)](https://img.shields.io/github/v/release/rfvasile/linalg-zero?no-cache)
 [![Build status](https://img.shields.io/github/actions/workflow/status/rfvasile/linalg-zero/main.yml?branch=main)](https://github.com/rfvasile/linalg-zero/actions/workflows/main.yml?query=branch%3Amain)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
